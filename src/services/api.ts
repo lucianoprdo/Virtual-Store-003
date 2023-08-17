@@ -1,6 +1,6 @@
 const URL_ENDPOINT = 'https://api.mercadolibre.com/sites/MLB/categories';
-const URL_TERMO = 'https://api.mercadolibre.com/sites/MLB/search?q=$QUERY';
-const URL_CATEGORY_ID = 'https://api.mercadolibre.com/sites/MLB/search?category=$CATEGORY_ID';
+// const URL_TERMO = 'https://api.mercadolibre.com/sites/MLB/search?q=$QUERY';
+// const URL_CATEGORY_ID = 'https://api.mercadolibre.com/sites/MLB/search?category=$CATEGORY_ID';
 const URL_CATEGORY_QUERY = 'https://api.mercadolibre.com/sites/MLB/search?category=$CATEGORY_ID&q=$QUERY';
 
 const getCategories = async () => {
@@ -10,7 +10,7 @@ const getCategories = async () => {
 };
 getCategories();
 
-const getProductsFromCategoryAndQuery = async (categoryId, query) => {
+const getProductsFromCategoryAndQuery = async () => {
   const getProductsCategory = await fetch(URL_CATEGORY_QUERY);
   const response = await getProductsCategory.json();
   return response;
