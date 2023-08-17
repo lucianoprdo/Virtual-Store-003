@@ -1,13 +1,21 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-function Home() {
+const home = () => {
   return (
     <div>
       <input type="text" placeholder="Digite o que você busca" />
       <h2 data-testid="home-initial-message">
         Digite algum termo de pesquisa ou escolha uma categoria.
       </h2>
+      <Link
+        to="/cart"
+        data-testid="shopping-cart-button"
+      >
+        Ir para o Carrinho de Compras
+      </Link>
     </div>
   );
-}
-export default Home;
+};
+
+export default home;
