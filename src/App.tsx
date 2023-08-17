@@ -1,15 +1,13 @@
 import React from 'react';
-import logo from './logo.svg';
+import { Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
 import './App.css';
-import { getCategories, getProductsFromCategoryAndQuery } from './services/api';
 
 function App() {
-  getCategories();
-  getProductsFromCategoryAndQuery('MLB1144', 'Games');
-
   return (
-    <div className="App" />
+    <Routes>
+      <Route path="/" element={ <Home /> } />
+    </Routes>
   );
 }
-
 export default App;
