@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import Categorias from '../components/Categorias/Categorias';
 import { useState } from 'react';
-import * as api from '../services/api'
+import Categorias from '../components/Categorias/Categorias';
+import * as api from '../services/api';
 
 const home = () => {
   const [pesquisar, setPesquisar] = useState('');
@@ -11,7 +11,7 @@ const home = () => {
     const newSearch = event.target.value;
     setPesquisar(newSearch);
     // setResultadoBusca(await api.getProductsFromCategoryAndQuery('', pesquisar));
-  }
+  };
 
   const handleSearch = async () => {
     console.log(pesquisar);
@@ -20,17 +20,16 @@ const home = () => {
     setResultadoBusca(recebe.results);
   };
 
-
   return (
     <div>
       <input
         type="text"
         placeholder="Digite o que você busca"
-        onChange={(event) => handleChange(event)}
+        onChange={ (event) => handleChange(event) }
         data-testid="query-input"
       />
       <button
-        onClick={handleSearch}
+        onClick={ handleSearch }
         data-testid="query-button"
       >
         PESQUISAR
@@ -47,8 +46,8 @@ const home = () => {
       </Link>
       <ul>
         {resultadoBusca.map((resultado: any) => (
-          <li key={resultado.id} data-testid="product">
-            <p>{resultado.title}</p>
+          <li key={ resultado.id } data-testid="product">
+            <p>{ resultado.title }</p>
           </li>
         ))}
       </ul>
