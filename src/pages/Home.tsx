@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Categorias from '../components/Categorias/Categorias';
 import * as api from '../services/api';
 
-const home = () => {
+function Home() {
   const [pesquisar, setPesquisar] = useState('');
   const [resultadoBusca, setResultadoBusca] = useState([]);
 
@@ -53,6 +53,6 @@ const home = () => {
       </ul>
     </div>
   );
-};
+}
 
-export default home;
+export default Home;
