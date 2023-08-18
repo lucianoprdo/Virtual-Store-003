@@ -15,7 +15,7 @@ function Categorias() {
       setCategories(receiveCategories);
     };
     receiveAllCategories();
-  }, [categories]);
+  }, []);
 
   console.log(categories);
 
