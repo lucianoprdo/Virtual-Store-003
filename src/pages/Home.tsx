@@ -20,6 +20,11 @@ function Home() {
     setResultadoBusca(recebe.results);
   };
 
+  const handleCategoryClick = async (categoryId: string) => {
+    const recebe = await api.getProductsFromCategoryAndQuery(categoryId, '');
+    setResultadoBusca(recebe.results);
+  };
+
   return (
     <div>
       <input
@@ -37,7 +42,7 @@ function Home() {
       <h2 data-testid="home-initial-message">
         Digite algum termo de pesquisa ou escolha uma categoria.
       </h2>
-      <Categorias />
+      <Categorias onCategoryClick={ handleCategoryClick } />
       <Link
         to="/cart"
         data-testid="shopping-cart-button"
@@ -48,6 +53,12 @@ function Home() {
         {resultadoBusca.map((resultado: any) => (
           <li key={ resultado.id } data-testid="product">
             <p>{ resultado.title }</p>
+            <img src={ resultado.thumbnail } alt={ resultado.title } />
+            {' '}
+            <p>
+              Preço: R$
+              {resultado.price}
+            </p>
           </li>
         ))}
       </ul>

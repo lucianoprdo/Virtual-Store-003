@@ -6,7 +6,11 @@ type TypeState = {
   id?: string
 };
 
-function Categorias() {
+interface CategoriasProps {
+  onCategoryClick: (categoryId: string) => void;
+}
+
+function Categorias({ onCategoryClick }: CategoriasProps) {
   const [categories, setCategories] = useState<TypeState[]>([]);
 
   useEffect(() => {
@@ -24,7 +28,12 @@ function Categorias() {
       <h3>Categorias</h3>
       {categories.map((category) => (
         <div key={ category.id }>
-          <button data-testid="category">{category.name}</button>
+          <button
+            data-testid="category"
+            onClick={ () => onCategoryClick(category.id || '') }
+          >
+            {category.name}
+          </button>
         </div>
       ))}
     </div>
