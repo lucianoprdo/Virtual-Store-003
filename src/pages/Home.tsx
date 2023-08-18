@@ -16,7 +16,7 @@ function Home() {
   const handleSearch = async () => {
     console.log(pesquisar);
     const recebe = await api.getProductsFromCategoryAndQuery('', pesquisar);
-    // console.log(recebe.results);
+    console.log(recebe.results);
     setResultadoBusca(recebe.results);
   };
 
@@ -52,7 +52,12 @@ function Home() {
       <ul>
         {resultadoBusca.map((resultado: any) => (
           <li key={ resultado.id } data-testid="product">
-            <p>{ resultado.title }</p>
+            <Link
+              to={ `/${resultado.id}` }
+              data-testid="product-detail-link"
+            >
+              { resultado.title }
+            </Link>
             <img src={ resultado.thumbnail } alt={ resultado.title } />
             {' '}
             <p>
