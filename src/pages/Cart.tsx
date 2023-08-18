@@ -10,7 +10,7 @@ type Product = {
 };
 
 function CartPage() {
-  const [cart, setCart] = useState<Product[]>([]);
+  const [cart] = useState<Product[]>([]);
 
   return (
     <div>
