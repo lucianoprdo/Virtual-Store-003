@@ -1,6 +1,10 @@
-import Categorias from '../components/Categorias/Categorias';
 
-function Home() {
+import Categorias from '../components/Categorias/Categorias';
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+
+const home = () => {
   return (
     <div>
       <input type="text" placeholder="Digite o que você busca" />
@@ -8,7 +12,15 @@ function Home() {
         Digite algum termo de pesquisa ou escolha uma categoria.
       </h2>
       <Categorias />
+      <Link
+        to="/cart"
+        data-testid="shopping-cart-button"
+      >
+        Ir para o Carrinho de Compras
+      </Link>
+
     </div>
   );
-}
-export default Home;
+};
+
+export default home;
