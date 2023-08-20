@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import Loading from '../components/Loading/Loading';
 
 type Product = {
   id: number;
@@ -48,6 +49,7 @@ function CartPage() {
     setLoading(false);
   };
 
+  if (loading) { <Loading />; }
   return (
     <div>
       <h2>Carrinho de Compras</h2>
@@ -72,9 +74,27 @@ function CartPage() {
               Quantidade:
               {product.quantity}
             </p>
-            <button onClick={ () => removeProduct(index) }>Remover</button>
-            <button onClick={ () => addQuantity(product, index) }>Adicionar</button>
-            <button onClick={ () => decreaseQuantity(product, index) }>Diminuir</button>
+            <button
+              data-testid="remove-product"
+              onClick={ () => removeProduct(index) }
+            >
+              Remover
+
+            </button>
+            <button
+              data-testid="product-increase-quantity"
+              onClick={ () => addQuantity(product, index) }
+            >
+              Adicionar
+
+            </button>
+            <button
+              data-testid="product-decrease-quantity"
+              onClick={ () => decreaseQuantity(product, index) }
+            >
+              Diminuir
+
+            </button>
           </div>
         ))
       )}
