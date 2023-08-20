@@ -25,6 +25,19 @@ function Detalhes() {
     productDetails();
   }, []);
 
+  const addToCart = (product: any) => {
+    const cartString = localStorage.getItem('cart');
+    const cart = cartString ? JSON.parse(cartString) : [];
+
+    const itemCart = cart.find(({ id }: any) => id === product.id);
+    if (itemCart) {
+      itemCart.quantity += 1;
+    } else {
+      cart.push({ ...product, quantity: 1 });
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+  };
+
   return (
     <div>
       <h1>DETALHES PRODUTO</h1>
@@ -49,6 +62,12 @@ function Detalhes() {
       >
         Carrinho
       </Link>
+      <button
+        data-testid="product-detail-add-to-cart"
+        onClick={ () => addToCart(details) }
+      >
+        Adicionar ao carrinho
+      </button>
     </div>
   );
 }
