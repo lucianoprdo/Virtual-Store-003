@@ -1,22 +1,43 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Categorias from '../components/Categorias/Categorias';
 import * as api from '../services/api';
+
+type Product = {
+  id: number;
+  title: string;
+  thumbnail: string;
+  price: number;
+  quantity: number;
+};
 
 function Home() {
   const [pesquisar, setPesquisar] = useState('');
   const [resultadoBusca, setResultadoBusca] = useState([]);
+  const [totalCartItems, setTotalCartItems] = useState(0);
+
+  useEffect(() => {
+    const totalCartItemsString = localStorage.getItem('totalCartItems');
+    const totalItems = totalCartItemsString ? JSON.parse(totalCartItemsString) : 0;
+    setTotalCartItems(totalItems);
+  }, []);
+
+  const updateTotalCartItems = (cart: Product[]) => {
+    const newTotalCartItems = cart.reduce(
+      (total: number, item: any) => total + item.quantity,
+      0,
+    );
+    setTotalCartItems(newTotalCartItems);
+    localStorage.setItem('totalCartItems', JSON.stringify(newTotalCartItems));
+  };
 
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const newSearch = event.target.value;
     setPesquisar(newSearch);
-    // setResultadoBusca(await api.getProductsFromCategoryAndQuery('', pesquisar));
   };
 
   const handleSearch = async () => {
-    console.log(pesquisar);
     const recebe = await api.getProductsFromCategoryAndQuery('', pesquisar);
-    console.log(recebe.results);
     setResultadoBusca(recebe.results);
   };
 
@@ -27,7 +48,7 @@ function Home() {
 
   const addToCart = (product: any) => {
     const cartString = localStorage.getItem('cart');
-    const cart = cartString ? JSON.parse(cartString) : [];
+    const cart: Product[] = cartString ? JSON.parse(cartString) : [];
 
     const itemCart = cart.find(({ id }: any) => id === product.id);
     if (itemCart) {
@@ -35,6 +56,9 @@ function Home() {
     } else {
       cart.push({ ...product, quantity: 1 });
     }
+
+    updateTotalCartItems(cart);
+
     localStorage.setItem('cart', JSON.stringify(cart));
   };
 
@@ -46,33 +70,26 @@ function Home() {
         onChange={ (event) => handleChange(event) }
         data-testid="query-input"
       />
-      <button
-        onClick={ handleSearch }
-        data-testid="query-button"
-      >
+      <button onClick={ handleSearch } data-testid="query-button">
         PESQUISAR
       </button>
       <h2 data-testid="home-initial-message">
         Digite algum termo de pesquisa ou escolha uma categoria.
       </h2>
       <Categorias onCategoryClick={ handleCategoryClick } />
-      <Link
-        to="/cart"
-        data-testid="shopping-cart-button"
-      >
-        Ir para o Carrinho de Compras
+      <Link to="/cart" data-testid="shopping-cart-button">
+        Ir para o Carrinho de Compras (
+        {totalCartItems}
+        {' '}
+        itens)
       </Link>
       <ul>
         {resultadoBusca.map((resultado: any) => (
           <li key={ resultado.id } data-testid="product">
-            <Link
-              to={ `/${resultado.id}` }
-              data-testid="product-detail-link"
-            >
-              { resultado.title }
+            <Link to={ `/${resultado.id}` } data-testid="product-detail-link">
+              {resultado.title}
             </Link>
             <img src={ resultado.thumbnail } alt={ resultado.title } />
-            {' '}
             <p>
               Preço: R$
               {resultado.price}
@@ -86,6 +103,9 @@ function Home() {
           </li>
         ))}
       </ul>
+      <p data-testid="shopping-cart-size" style={ { display: 'none' } }>
+        {totalCartItems}
+      </p>
     </div>
   );
 }
