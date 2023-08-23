@@ -13,12 +13,26 @@ type Product = {
 function CartPage() {
   const [cart, setCart] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
+  const [totalCartItems, setTotalCartItems] = useState(0); // State para armazenar o total de itens no carrinho
 
   useEffect(() => {
     const cartString = localStorage.getItem('cart');
     const cartData: Product[] = cartString ? JSON.parse(cartString) : [];
     setCart(cartData);
+
+    // Calcula e atualiza o total de itens no carrinho
+    setTotalCartItems(countCartItems(cartData));
   }, []);
+
+  const countCartItems = (cartData: Product[]): number => {
+    return cartData.reduce((total, item) => total + item.quantity, 0);
+  };
+
+  const updateTotalCartItems = (updatedCart: Product[]): void => {
+    const totalItems = countCartItems(updatedCart);
+    setTotalCartItems(totalItems);
+    localStorage.setItem('totalCartItems', JSON.stringify(totalItems));
+  };
 
   const removeProduct = (index: number) => {
     setLoading(true);
@@ -26,6 +40,10 @@ function CartPage() {
     updatedCart.splice(index, 1);
     localStorage.setItem('cart', JSON.stringify(updatedCart));
     setCart(updatedCart);
+
+    // Atualiza o total de itens no carrinho
+    updateTotalCartItems(updatedCart);
+
     setLoading(false);
   };
 
@@ -35,6 +53,10 @@ function CartPage() {
     updatedCart[index].quantity += 1;
     localStorage.setItem('cart', JSON.stringify(updatedCart));
     setCart(updatedCart);
+
+    // Atualiza o total de itens no carrinho
+    updateTotalCartItems(updatedCart);
+
     setLoading(false);
   };
 
@@ -45,6 +67,9 @@ function CartPage() {
       updatedCart[index].quantity -= 1;
       localStorage.setItem('cart', JSON.stringify(updatedCart));
       setCart(updatedCart);
+
+      // Atualiza o total de itens no carrinho
+      updateTotalCartItems(updatedCart);
     }
     setLoading(false);
   };
@@ -98,6 +123,10 @@ function CartPage() {
           </div>
         ))
       )}
+      <p>
+        Total de itens no carrinho:
+        {totalCartItems}
+      </p>
       <Link to="/">Voltar para a Página Inicial</Link>
     </div>
   );
