@@ -94,6 +94,11 @@ function Home() {
               Preço: R$
               {resultado.price}
             </p>
+            {resultado.shipping.free_shipping && ( // Verifica se tem frete grátis
+              <p data-testid="free-shipping" style={ { color: 'green' } }>
+                Frete grátis!
+              </p>
+            )}
             <button
               data-testid="product-add-to-cart"
               onClick={ () => addToCart(resultado) }
