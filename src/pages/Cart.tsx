@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Loading from '../components/Loading/Loading';
 
 type Product = {
@@ -73,6 +73,10 @@ function CartPage() {
     }
     setLoading(false);
   };
+  const navigate = useNavigate();
+  const checkoutPage = async () => {
+    navigate('/checkout');
+  };
 
   if (loading) { <Loading />; }
   return (
@@ -123,6 +127,12 @@ function CartPage() {
           </div>
         ))
       )}
+      <button
+        data-testid="checkout-products"
+        onClick={ () => checkoutPage() }
+      >
+        Finalizar compra
+      </button>
       <p>
         Total de itens no carrinho:
         {totalCartItems}
