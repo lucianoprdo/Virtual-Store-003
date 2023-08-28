@@ -8,6 +8,7 @@ type Product = {
   thumbnail: string;
   price: number;
   quantity: number;
+  available_quantity: number;
 };
 
 function CartPage() {
@@ -49,14 +50,15 @@ function CartPage() {
 
   const addQuantity = (product: Product, index: number) => {
     setLoading(true);
-    const updatedCart = [...cart];
-    updatedCart[index].quantity += 1;
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
-    setCart(updatedCart);
+    if (product.quantity < product.available_quantity) {
+      const updatedCart = [...cart];
+      updatedCart[index].quantity += 1;
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
+      setCart(updatedCart);
 
-    // Atualiza o total de itens no carrinho
-    updateTotalCartItems(updatedCart);
-
+      // Atualiza o total de itens no carrinho
+      updateTotalCartItems(updatedCart);
+    }
     setLoading(false);
   };
 
@@ -113,9 +115,9 @@ function CartPage() {
             <button
               data-testid="product-increase-quantity"
               onClick={ () => addQuantity(product, index) }
+              disabled={ product.quantity >= product.available_quantity }
             >
               Adicionar
-
             </button>
             <button
               data-testid="product-decrease-quantity"
