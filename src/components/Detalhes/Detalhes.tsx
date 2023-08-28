@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import * as api from '../../services/api';
 import Loading from '../Loading/Loading';
 
 const VALID_EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-export type ProductType = {
+type ProductType = {
   id:string,
   title : string,
   thumbnail: string,
@@ -15,6 +15,7 @@ export type ProductType = {
 } | null;
 
 type DetalhesType = {
+  id: string;
   title: string;
   thumbnail: string;
   price: number;
@@ -22,6 +23,7 @@ type DetalhesType = {
 };
 
 const INITIAL_DETALHE = {
+  id: '',
   title: '',
   price: 0,
   thumbnail: '',
@@ -47,44 +49,39 @@ function Detalhes() {
   const [form, setForm] = useState<Review>(initialState);
   const [evaluations, setEvaluations] = useState<Review[]>([]);
   const [isVerified, setIsVerified] = useState<boolean>(false);
-  const { productId }: any = useParams();
-
   useEffect(() => {
     const productDetails = async () => {
       const detalhes = await api.getProductById(window.location.pathname);
       setDetails(detalhes);
     };
     productDetails();
-
     // Atualiza o total de itens no carrinho no estado local
     const totalCartItemsString = localStorage.getItem('totalCartItems');
     const totalItems = totalCartItemsString ? JSON.parse(totalCartItemsString) : 0;
     setTotalCartItems(totalItems);
-
     // Carrega avaliações do LocalStorage com base no productId
-    const storedReviews = localStorage.getItem(`reviews-${details.title}`);
+    const storedReviews = localStorage.getItem(`${details.id}`);
     if (storedReviews) {
       setEvaluations(JSON.parse(storedReviews));
     }
-  }, [details.title]);
+  }, [details.id]);
 
-  const addToCart = (products: any) => {
+  const addToCart = () => {
     const cartString = localStorage.getItem('cart');
     const cart = cartString ? JSON.parse(cartString) : [];
 
-    const itemCart = cart.find(({ id }: any) => id === products.id);
+    const itemCart = cart.find(({ id }: any) => id === details.id);
     if (itemCart) {
       itemCart.quantity += 1;
     } else {
-      cart.push({ ...product, quantity: 1 });
+      cart.push({ ...details, quantity: 1 }); // Usando 'details' em vez de 'product'
     }
 
     const newTotalCartItems = cart.reduce(
       (total: number, item: any) => total + item.quantity,
       0,
     );
-    setTotalCartItems(newTotalCartItems); // Atualiza o total de itens no carrinho no estado local
-
+    setTotalCartItems(newTotalCartItems);
     localStorage.setItem('cart', JSON.stringify(cart));
   };
 
@@ -105,11 +102,10 @@ function Detalhes() {
       setIsVerified(false);
       const newEvaluations = [...evaluations, form];
       setEvaluations(newEvaluations);
-      localStorage.setItem(`reviews-${details.title}`, JSON.stringify(newEvaluations));
+      localStorage.setItem(`reviews-${details.id}`, JSON.stringify(newEvaluations));
       setForm(initialState);
     }
   };
-
   return (
     <div>
       { details ? (
@@ -137,7 +133,7 @@ function Detalhes() {
       )}
       <button
         data-testid="product-detail-add-to-cart"
-        onClick={ () => addToCart(details) }
+        onClick={ addToCart }
       >
         Adicionar ao carrinho
       </button>
@@ -229,12 +225,9 @@ function Detalhes() {
             <h4 data-testid="review-card-rating">{evaluation.rating}</h4>
             <p data-testid="review-card-evaluation">{evaluation.text}</p>
           </div>
-
         ))}
-
       </div>
     </div>
   );
 }
-
 export default Detalhes;
